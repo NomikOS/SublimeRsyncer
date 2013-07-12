@@ -1,32 +1,30 @@
 import sublime
 import sublime_plugin
 import subprocess
-import threading
 import sys
 
 
 class SublimeRsyncer(sublime_plugin.EventListener):
-    def on_post_save(self, view):
+    def on_post_save_async(self, view):
+        # sublime.status_message("wwwww")
         settings = sublime.load_settings('SublimeRsyncer.sublime-settings')
         folders = settings.get("folders")
         current_file = view.file_name()
         if folders:
             for folder in folders:
                 if current_file[:len(folder['localPath'])] == folder['localPath']:
-
                     # spawn a thread so non-blocking
                     thread = Rsync(folder['localPath'], folder['remote'], folder['exclude'], folder['deleteAfter'])
-                    thread.start()
+                    thread.run() #.start()
 
 
-class Rsync(threading.Thread):
+class Rsync(object): #threading.Thread):
     def __init__(self, localPath, remote, exclude, deleteAfter):
         self.localPath = localPath
         self.remote = remote
         self.exclude = exclude
         self.deleteAfter = deleteAfter
         self.result = None
-        threading.Thread.__init__(self)
 
     def run(self):
 
@@ -48,26 +46,11 @@ class Rsync(threading.Thread):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
-        error = False
+        rc = process.wait()
 
-        while True:
-            next_line = process.stdout.readline()
-            if next_line == '' and process.poll() != None:
-                break
-            sys.stdout.write(next_line)
-            sys.stdout.flush()
-
-        while True:
-            next_line = process.stderr.readline()
-            if next_line == '' and process.poll() != None:
-                break
-            sys.stderr.write(next_line)
-            sys.stderr.flush()
-            error = True
-
-        if (error == True):
-            print "SublimeRsyncer: Failed! :-("
+        if rc != 0:
+            print("SublimeRsyncer: Failed, rc={}".format(rc))
         else:
-            print "SublimeRsyncer: Done :-)"
+            print("SublimeRsyncer: Done.")
 
         return
