@@ -12,7 +12,7 @@ class SublimeRsyncer(sublime_plugin.EventListener):
         current_file = view.file_name()
         if folders:
             for folder in folders:
-                if current_file[:len(folder['localPath'])] == folder['localPath']:
+                if folder.get('active') and current_file[:len(folder['localPath'])] == folder['localPath']:
                     # spawn a thread so non-blocking
                     thread = Rsync(folder['localPath'], folder['remote'], folder['exclude'], folder['deleteAfter'])
                     thread.run() #.start()
@@ -28,7 +28,7 @@ class Rsync(object): #threading.Thread):
 
     def run(self):
 
-        commandComponents = ['rsync', '-avz', self.localPath, self.remote]
+        commandComponents = ['rsync', '-avzl', self.localPath, self.remote]
 
         if self.deleteAfter:
             commandComponents.insert(2, "--delete-after")
