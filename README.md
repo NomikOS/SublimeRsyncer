@@ -10,13 +10,13 @@ Download (or clone) the latest source from [GitHub](http://github.com/xenolog/Su
 The "Packages" directory is located at:
 
 * OS X:
-	~/Library/Application Support/Sublime Text 3/Packages/
+  ~/Library/Application Support/Sublime Text 3/Packages/
 
 * Linux:
-	~/.config/sublime-text-3/Packages/
+  ~/.config/sublime-text-3/Packages/
 
 * Windows:
-	%APPDATA%/Sublime Text 3/Packages/
+  %APPDATA%/Sublime Text 3/Packages/
 
 !!! Do not put package to User directory !!!
 
@@ -29,18 +29,21 @@ An example config could look like so:
 ```
 {
   "folders": [
-  	{
-  		"localPath"	: "/Users/jimmy/code/project1/",
-  		"remote"	: "jimmy@my-vm:/var/www/project1/",
-  		"exclude"	: [".git", ".svn"],
-  		"deleteAfter"	: true
-  	},
-  	{
-  		"localPath"	: "/Users/jimmy/code/project2/",
-  		"remote"	: "jimmy@192.168.0.55:/var/www/project2/",
-  		"exclude"	: [".git", ".svn"],
-  		"deleteAfter"	: false
-  	}
+    {
+      "localPath" : "/Users/jimmy/code/project1/",
+      "remote"  : "jimmy@my-vm:/var/www/project1/",
+      "exclude" : [".git", ".svn"],
+      "ssh_port"   : "2222",
+      "ssh_config" : "/tmp/ssh_config",
+      "ssh_identity_file" : "/tmp/ssh_identity_file",
+      "deleteAfter" : true
+    },
+    {
+      "localPath" : "/Users/jimmy/code/project2/",
+      "remote"  : "jimmy@192.168.0.55:/var/www/project2/",
+      "exclude" : [".git", ".svn"],
+      "deleteAfter" : false
+    }
   ]
 }
 ```
